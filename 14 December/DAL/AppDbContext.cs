@@ -10,5 +10,6 @@ namespace _14_December.DAL
             
         }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }
