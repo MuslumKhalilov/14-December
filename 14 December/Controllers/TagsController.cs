@@ -36,5 +36,45 @@ namespace _14_December.Controllers
 			}
 			return Ok(tag);
 		}
+		[HttpPost]
+		public async Task<IActionResult> Create(Tag tag)
+		{
+			_context.Tags.Add(tag);
+			await _context.SaveChangesAsync();
+			return StatusCode(StatusCodes.Status201Created, tag);
+		}
+		[HttpPut]
+		public async Task<IActionResult> Update(int id, string name)
+		{
+			if (id <= 0)
+			{
+				return StatusCode(StatusCodes.Status400BadRequest);
+			}
+			Tag tag = await _context.Tags.FirstOrDefaultAsync(c => c.Id == id);
+			if (tag == null)
+			{
+				return StatusCode(StatusCodes.Status404NotFound);
+			}
+			tag.Name = name;
+			await _context.SaveChangesAsync();
+			return NoContent();
+		}
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			if (id <= 0)
+			{
+				return StatusCode(StatusCodes.Status400BadRequest);
+			}
+			Tag tag = await _context.Tags.FirstOrDefaultAsync(c => c.Id == id);
+			if (tag == null)
+			{
+				return StatusCode(StatusCodes.Status404NotFound);
+			}
+			_context.Tags.Remove(tag);
+			await _context.SaveChangesAsync();
+			return NoContent();
+		}
 	}
 }
+
