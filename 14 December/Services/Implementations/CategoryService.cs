@@ -19,6 +19,16 @@ namespace _14_December.Services.Implementations
         public async Task CreateAsync(CreateCategoryDto categoryDto)
         {
             await _repository.AddAsync(new Category {Name = categoryDto.Name });
+            await _repository.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Category category = await _repository.GetByIDAsync(id);
+            if (category == null) throw new Exception("Not found");
+            _repository.DeleteAsync(category);
+            await _repository.SaveChangesAsync();
+            
         }
 
         public async Task<ICollection<GetCategoryDto>> GetAllAsync(int page, int take)
@@ -38,6 +48,14 @@ namespace _14_December.Services.Implementations
             if (category is null) throw new Exception("NotFound");
             GetCategoryDto dto = new GetCategoryDto { Name = category.Name, Id = category.Id };
             return dto;
+        }
+
+        public async Task UpdateAsync(int id, string name)
+        {
+            Category category = await _repository.GetByIDAsync(id);
+            if (category is null) throw new Exception("Not found");
+            category.Name = name;
+            await _repository.SaveChangesAsync();
         }
     }
 }

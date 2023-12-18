@@ -53,15 +53,10 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			Category category = await _context.Categories.FirstOrDefaultAsync(c=>c.Id==id);
-			if (category == null)
-			{
-				return StatusCode(StatusCodes.Status404NotFound);
-			}
-			category.Name = name;
-			_repository.Update(category);
-			await _repository.SaveChangesAsync();
-			return NoContent();
+			
+			await _service.UpdateAsync(id, name);
+
+            return NoContent();
 		}
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
@@ -70,14 +65,15 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			Category category= await _repository.GetByIDAsync(id);
-			if (category == null)
-			{
-				return StatusCode(StatusCodes.Status404NotFound);
-			}
+			//Category category= await _repository.GetByIDAsync(id);
+			//if (category == null)
+			//{
+			//	return StatusCode(StatusCodes.Status404NotFound);
+			//}
 
-			_repository.DeleteAsync(category);
-			await _repository.SaveChangesAsync();
+			//_repository.DeleteAsync(category);
+			//await _repository.SaveChangesAsync();
+			await _service.DeleteAsync(id);
 			return NoContent();
 		}
     }
