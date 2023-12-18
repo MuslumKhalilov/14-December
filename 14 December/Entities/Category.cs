@@ -1,8 +1,10 @@
-﻿namespace _14_December.Entities
+﻿using _14_December.Entities.Base;
+
+namespace _14_December.Entities
 {
-	public class Category
+	public class Category:BaseEntity
 	{
-		public int Id { get; set; }	
+		
 		public string Name { get; set; }
 	}
 }

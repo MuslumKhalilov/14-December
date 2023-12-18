@@ -1,33 +1,36 @@
 ﻿using System.Linq.Expressions;
 using _14_December.DAL;
 using _14_December.Entities;
+using _14_December.Entities.Base;
 using _14_December.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace _14_December.Repositories.Implementations
 {
-    public class Repository : IRepository
+    public class Repository<T> : IRepository<T> where T : BaseEntity, new()
     {
         private readonly AppDbContext _context;
+        private readonly DbSet<T> _table;
 
         public Repository(AppDbContext context)
         {
                 _context = context;
+                _table = context.Set<T>();
         }
 
-        public async Task AddAsync(Category category)
+        public async Task AddAsync(T entity)
         {
-           await _context.AddAsync(category);
+           await _context.AddAsync(entity);
         }
 
-        public  void DeleteAsync(Category category)
+        public  void DeleteAsync(T entity)
         {
-             _context.Categories.Remove(category);
+             _table.Remove(entity);
         }
 
-        public async Task<IQueryable<Category>> GetAllAsync(Expression<Func<Category, bool>>? expression = null, params string[] includes)
+        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>>? expression = null, params string[] includes)
         {
-            var query = _context.Categories.AsQueryable();
+            var query = _table.AsQueryable();
             if (expression is not null)
             {
                 query = query.Where(expression);
@@ -42,10 +45,10 @@ namespace _14_December.Repositories.Implementations
             return query;
         }
 
-        public async Task<Category> GetByIDAsync(int id)
+        public async Task<T> GetByIDAsync(int id)
         {
-            Category category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-            return category;
+            T entity = await _table.FirstOrDefaultAsync(e => e.Id == id);
+            return entity;
         }
 
         public async Task SaveChangesAsync()
@@ -53,9 +56,9 @@ namespace _14_December.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(Category category)
+        public void UpdateAsync(T entity)
         {
-            _context.Categories.Update(category);
+            _table.Update(entity);
         }
     }
 }
