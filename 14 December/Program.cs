@@ -1,4 +1,6 @@
 using _14_December.DAL;
+using _14_December.Repositories.Implementations;
+using _14_December.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace _14_December
@@ -19,6 +21,7 @@ namespace _14_December
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.AddScoped<IRepository, Repository>();
 
 			var app = builder.Build();
 

@@ -1,5 +1,6 @@
 ﻿using _14_December.DAL;
 using _14_December.Entities;
+using _14_December.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,15 +12,17 @@ namespace _14_December.Controllers
 	public class CategoriesController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+        private readonly IRepository _repository;
 
-		public CategoriesController(AppDbContext context)
+        public CategoriesController(AppDbContext context, IRepository repository)
         {
-            _context = context;
+			_context = context;
+			_repository = repository;
         }
 		[HttpGet]
 		public async Task<IActionResult> Get(int page=1, int take=3)
 		{
-			List<Category> categories=await _context.Categories.Skip((page-1)*take).Take(take).ToListAsync();
+			IEnumerable<Category> categories=await _repository.GetAllAsync();
 			return Ok(categories);
 		}
 		[HttpGet("{id}")]
@@ -29,7 +32,7 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			Category category= await _context.Categories.FirstOrDefaultAsync(c=>c.Id==id);
+			Category category= await _repository.GetByIDAsync(id);
 			if (category == null)
 			{
 				return StatusCode(StatusCodes.Status404NotFound);
