@@ -1,4 +1,5 @@
 ﻿using _14_December.DAL;
+using _14_December.Dtos;
 using _14_December.Entities;
 using _14_December.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -40,10 +41,15 @@ namespace _14_December.Controllers
 			return Ok(category);
 		}
 		[HttpPost]
-		public async Task<IActionResult> Create(Category category)
+		public async Task<IActionResult> Create([FromForm]CreateCategoryDto categoryDto)
 		{
-			_context.Categories.Add(category);
-			await _context.SaveChangesAsync();
+			Category category = new Category
+			{
+				Name = categoryDto.Name
+			};
+			
+			_repository.AddAsync(category);
+			await _repository.SaveChangesAsync();
 			return StatusCode(StatusCodes.Status201Created,category);
 		}
 		[HttpPut]
@@ -59,7 +65,8 @@ namespace _14_December.Controllers
 				return StatusCode(StatusCodes.Status404NotFound);
 			}
 			category.Name = name;
-			await _context.SaveChangesAsync();
+			_repository.UpdateAsync(category);
+			_repository.SaveChangesAsync();
 			return NoContent();
 		}
 		[HttpDelete("{id}")]
@@ -69,13 +76,14 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			Category category= await _context.Categories.FirstOrDefaultAsync(c=> c.Id==id);
+			Category category= await _repository.GetByIDAsync(id);
 			if (category == null)
 			{
 				return StatusCode(StatusCodes.Status404NotFound);
 			}
-			_context.Categories.Remove(category);
-			await _context.SaveChangesAsync();
+
+			_repository.DeleteAsync(category);
+			await _repository.SaveChangesAsync();
 			return NoContent();
 		}
     }

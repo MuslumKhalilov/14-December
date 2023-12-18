@@ -14,6 +14,17 @@ namespace _14_December.Repositories.Implementations
         {
                 _context = context;
         }
+
+        public async Task AddAsync(Category category)
+        {
+           await _context.AddAsync(category);
+        }
+
+        public  void DeleteAsync(Category category)
+        {
+             _context.Categories.Remove(category);
+        }
+
         public async Task<IQueryable<Category>> GetAllAsync(Expression<Func<Category, bool>>? expression = null, params string[] includes)
         {
             var query = _context.Categories.AsQueryable();
@@ -35,6 +46,16 @@ namespace _14_December.Repositories.Implementations
         {
             Category category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             return category;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public void UpdateAsync(Category category)
+        {
+            _context.Categories.Update(category);
         }
     }
 }
