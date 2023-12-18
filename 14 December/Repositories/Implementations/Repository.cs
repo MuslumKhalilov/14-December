@@ -28,7 +28,7 @@ namespace _14_December.Repositories.Implementations
              _table.Remove(entity);
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(
+        public IQueryable<T> GetAllAsync(
             Expression<Func<T, bool>>? expression = null,
             Expression<Func<T, object>>? orderExpression = null, 
             bool isDescending = false,
@@ -77,7 +77,7 @@ namespace _14_December.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public void UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _table.Update(entity);
         }

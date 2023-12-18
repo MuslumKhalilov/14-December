@@ -2,6 +2,7 @@
 using _14_December.Dtos;
 using _14_December.Entities;
 using _14_December.Repositories.Interfaces;
+using _14_December.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +15,19 @@ namespace _14_December.Controllers
 	{
 		private readonly AppDbContext _context;
         private readonly ICategoryRepository _repository;
+        private readonly ICategoryService _service;
 
-        public CategoriesController(AppDbContext context, ICategoryRepository repository)
+        public CategoriesController(AppDbContext context, ICategoryRepository repository,ICategoryService service)
         {
 			_context = context;
 			_repository = repository;
+			_service= service;
         }
 		[HttpGet]
 		public async Task<IActionResult> Get(int page=1, int take=3)
 		{
-			IEnumerable<Category> categories=await _repository.GetAllAsync(skip:(page-1)*take,take:take);
-			return Ok(categories);
+			
+			return Ok(await _service.GetAllAsync(page,take));
 		}
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(int id)
@@ -33,24 +36,15 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			Category category= await _repository.GetByIDAsync(id);
-			if (category == null)
-			{
-				return StatusCode(StatusCodes.Status404NotFound);
-			}
-			return Ok(category);
+			
+			
+			return Ok(_service.GetByIdAsync(id));
 		}
 		[HttpPost]
 		public async Task<IActionResult> Create([FromForm]CreateCategoryDto categoryDto)
 		{
-			Category category = new Category
-			{
-				Name = categoryDto.Name
-			};
-			
-			_repository.AddAsync(category);
-			await _repository.SaveChangesAsync();
-			return StatusCode(StatusCodes.Status201Created,category);
+			await _service.CreateAsync(categoryDto);
+			return StatusCode(StatusCodes.Status201Created);
 		}
 		[HttpPut]
 		public async Task<IActionResult> Update(int id,string name)
@@ -65,8 +59,8 @@ namespace _14_December.Controllers
 				return StatusCode(StatusCodes.Status404NotFound);
 			}
 			category.Name = name;
-			_repository.UpdateAsync(category);
-			_repository.SaveChangesAsync();
+			_repository.Update(category);
+			await _repository.SaveChangesAsync();
 			return NoContent();
 		}
 		[HttpDelete("{id}")]

@@ -7,7 +7,7 @@ namespace _14_December.Repositories.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity, new()
     {
-        Task<IQueryable<T>> GetAllAsync(
+        IQueryable<T> GetAllAsync(
             Expression<Func<T,bool>>? expression= null,
             Expression<Func<T, object>>? orderExpression = null,
             bool isDescending = false,
@@ -19,7 +19,7 @@ namespace _14_December.Repositories.Interfaces
         Task<T> GetByIDAsync(int id);
         Task AddAsync(T entity);
         void DeleteAsync(T entity);
-        void UpdateAsync(T entity);
+        void Update(T entity);
         Task SaveChangesAsync();
     }
 }

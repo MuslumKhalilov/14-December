@@ -1,6 +1,8 @@
 using _14_December.DAL;
 using _14_December.Repositories.Implementations;
 using _14_December.Repositories.Interfaces;
+using _14_December.Services.Implementations;
+using _14_December.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace _14_December
@@ -22,6 +24,7 @@ namespace _14_December
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
+			builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 			var app = builder.Build();
 
