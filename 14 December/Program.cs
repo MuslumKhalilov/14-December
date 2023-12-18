@@ -25,8 +25,10 @@ namespace _14_December
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 			builder.Services.AddScoped<ICategoryService, CategoryService>();
+			builder.Services.AddScoped<ITagRepository, TagRepository>();
+			builder.Services.AddScoped<ITagService, TagService>();
 
-			var app = builder.Build();
+            var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

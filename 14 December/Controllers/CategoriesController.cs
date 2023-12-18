@@ -35,10 +35,8 @@ namespace _14_December.Controllers
 			if (id <= 0)
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
-			}
-			
-			
-			return Ok(_service.GetByIdAsync(id));
+			}			
+			return Ok(await _service.GetByIdAsync(id));
 		}
 		[HttpPost]
 		public async Task<IActionResult> Create([FromForm]CreateCategoryDto categoryDto)
@@ -53,7 +51,6 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			
 			await _service.UpdateAsync(id, name);
 
             return NoContent();
@@ -65,14 +62,6 @@ namespace _14_December.Controllers
 			{
 				return StatusCode(StatusCodes.Status400BadRequest);
 			}
-			//Category category= await _repository.GetByIDAsync(id);
-			//if (category == null)
-			//{
-			//	return StatusCode(StatusCodes.Status404NotFound);
-			//}
-
-			//_repository.DeleteAsync(category);
-			//await _repository.SaveChangesAsync();
 			await _service.DeleteAsync(id);
 			return NoContent();
 		}
