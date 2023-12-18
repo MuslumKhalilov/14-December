@@ -13,9 +13,9 @@ namespace _14_December.Controllers
 	public class CategoriesController : ControllerBase
 	{
 		private readonly AppDbContext _context;
-        private readonly IRepository _repository;
+        private readonly ICategoryRepository _repository;
 
-        public CategoriesController(AppDbContext context, IRepository repository)
+        public CategoriesController(AppDbContext context, ICategoryRepository repository)
         {
 			_context = context;
 			_repository = repository;

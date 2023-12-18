@@ -9,9 +9,9 @@ namespace _14_December.Repositories.Interfaces
     {
         Task<IQueryable<T>> GetAllAsync(Expression<Func<T,bool>>? expression= null, params string[] includes);
         Task<T> GetByIDAsync(int id);
-        Task AddAsync(T category);
-        void DeleteAsync(T category);
-        void UpdateAsync(T category);
+        Task AddAsync(T entity);
+        void DeleteAsync(T entity);
+        void UpdateAsync(T entity);
         Task SaveChangesAsync();
     }
 }
