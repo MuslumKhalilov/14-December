@@ -28,12 +28,30 @@ namespace _14_December.Repositories.Implementations
              _table.Remove(entity);
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>>? expression = null, params string[] includes)
+        public async Task<IQueryable<T>> GetAllAsync(
+            Expression<Func<T, bool>>? expression = null,
+            Expression<Func<T, object>>? orderExpression = null, 
+            bool isDescending = false,
+            int skip = 0,
+            int take = 0,
+            bool isTracking =true,
+            params string[] includes)
         {
             var query = _table.AsQueryable();
             if (expression is not null)
             {
                 query = query.Where(expression);
+            }
+            if (orderExpression is not null)
+            {
+                if (isDescending==true)
+                {
+                    query = query.OrderBy(orderExpression);
+                }
+                else
+                {
+                    query = query.OrderByDescending(orderExpression);
+                }
             }
             if (includes != null)
             {
@@ -42,7 +60,10 @@ namespace _14_December.Repositories.Implementations
                     query.Include(includes[i]);
                 }
             }
-            return query;
+            if (skip != 0) {  query = query.Skip(skip); }
+            if (take != 0) { query.Take(take); }
+            
+            return isTracking?query:query.AsNoTracking();
         }
 
         public async Task<T> GetByIDAsync(int id)
